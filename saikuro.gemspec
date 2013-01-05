@@ -20,5 +20,6 @@ Gem::Specification.new do |gem|
   gem.version       = Saikuro::VERSION
   gem.rubyforge_project = 'saikuro'
   gem.has_rdoc      = true
-  gem.extra_rdoc_files = ["USAGE"]
+  gem.extra_rdoc_files = ["bin/saikuro"]
+
 end

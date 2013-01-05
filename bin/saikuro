@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
+# $Id$
+# Run saikuro --help for option names and descriptions
+
 require 'saikuro'
 
-SaikuroCMDLineRunner.new.run
+Saikuro::CLI.run( ARGV )
 
