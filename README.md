@@ -6,7 +6,7 @@ complexity of each method found.  In addition, Saikuro counts the
 number of lines per method and can generate a listing of the number of
 tokens on each line of code.
 
-[1]: http://saikuro.rubyforge.org "Forked from Ruby Forge by Max Schubert"
+[1]: http://saikuro.rubyforge.org "Originally hosted on Ruby Forge, authored by Zev Blut"
 
 ## License:
 Saikuro uses the BSD license.
