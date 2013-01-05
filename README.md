@@ -1,49 +1,36 @@
-saikuro
-=======
+## Saikuro:
 
-Fork of Zev Blut's cyclomatic coplexity tool for ruby - fixing option parsingVersion 0.2
-
-Saikuro:
 Saikuro is a Ruby cyclomatic complexity analyzer.  When given Ruby
 source code Saikuro will generate a report listing the cyclomatic
 complexity of each method found.  In addition, Saikuro counts the
 number of lines per method and can generate a listing of the number of
 tokens on each line of code.
 
-License:
+** Forked from rubyforge.net by Max Schubert
+
+## License:
 Saikuro uses the BSD license.
 
-Installation:
-Option 1: Using setup.rb
-* login as root
-* run "ruby setup.rb all"
+## Installation:
 
-Option 2: The manual way
-Saikuro is a single Ruby file that is executable.  You can run it where
-you unpacked it or you can move it your preferred location such as
-"/usr/local/bin" or "~/bin".
+gem install 'saikuro', :git => %{https://github/perldork/saikuro}
 
-Note:
-Ruby 1.8.5 has a bug in ri_options that will prevent Saikuro from
-running.  If you are using 1.8.5 please apply this patch :
-http://www.ruby-lang.org/cgi-bin/cvsweb.cgi/ruby/lib/rdoc/ri/ri_options.rb.diff?r1=1.2.2.13;r2=1.2.2.14
+## Usage:
 
-
-Usage:
 Saikuro is a command line program.
 Running "saikuro -h" will output a usage statement describing all
 the various arguments you can pass to it.
 
-"saikuro -c -p tests/samples.rb"
+saikuro -c -p tests/samples.rb
 
 The above command is a simple example that generates a cyclomatic
 complexity report on the samples.rb file, using the default filter,
 warning and error settings. The report is saved in the current
 directory.
 
-
 A more detailed example is
-"saikuro -c -t -i tests -y 0 -w 11 -e 16 -o out/"
+
+saikuro -c -t -i tests -y 0 -w 11 -e 16 -o out/
 
 This will analyze all Ruby files found in the "tests/" directory.
 Saikuro will generate a token count report and a cyclomatic complexity
@@ -54,7 +41,7 @@ warning.  Finally, "-e 16" will flag all methods with a complexity of
 16 or higher with an error.
 
 
-About Cyclomatic Complexity:
+## About Cyclomatic Complexity:
 
 The following document provides a very good and detailed description
 by the author of cyclomatic complexity.
@@ -70,7 +57,7 @@ PDF
 http://www.mccabe.com/iq_research_nist.htm
 
 
-How and what Saikuro counts to calculate the cyclomatic complexity:
+### How and what Saikuro counts to calculate the cyclomatic complexity:
 
 Saikuro uses the Simplified Complexity Calculation, which is just
 adding up the number of branch points in a method.
@@ -96,7 +83,7 @@ currently do not contribute to a method's complexity, although
 McCabe's paper listed above suggests doing so.
 
 
-#Example for "and" operator handling:
+Example for "and" operator handling:
 
  # Starting values for case 1 and 2
  x = false
@@ -123,21 +110,24 @@ So why is it not added?
 Mainly, because we have not gotten around to it.  We are wondering if
 this would increase the noise more than it should.
 
+## Tests:
 
-Tests:
 In the test directory is a sample file that has examples of the
 various possible cases that we examined and documented the expected
 cyclomatic complexity result.  If you find mistakes or missing tests
 please report them.
 
-Contact:
-Saikuro is written by
-Zev Blut (zb at ubit dot com)
+## Contact:
 
-Acknowledgments:
+- Saikuro is written by Zev Blut (zb at ubit dot com)
+- Modified to work with ruby 1.9.3 - Max Schubert (perldork@webwizarddesign.com)
+
+## Acknowledgments:
+
 Thanks to Elbert Corpuz for writing the CSS for the HTML output!
 
-Other metric tools for Ruby:
+## Other metric tools for Ruby:
+
 Ryan Davis has an abc metric program as an example in his ParseTree
 product:  http://www.zenspider.com/ZSS/Products/ParseTree/
 
