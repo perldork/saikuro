@@ -6,14 +6,11 @@ tokens on each line of code.
 
 [1]: http://saikuro.rubyforge.org "Originally hosted on Ruby Forge, authored by Zev Blut"
 
-## License:
-Saikuro uses the BSD license.
-
-## Installation:
+## Installation
 
     gem install 'saikuro', :git => %{https://github.com/perldork/saikuro}
 
-## Usage:
+## Usage
 
 Saikuro is a command line program.
 Running "saikuro -h" will output a usage statement describing all
@@ -39,7 +36,7 @@ warning.  Finally, "-e 16" will flag all methods with a complexity of
 16 or higher with an error.
 
 
-## About Cyclomatic Complexity:
+## About Cyclomatic Complexity
 
 The following document provides a very good and detailed description
 by the author of cyclomatic complexity.
@@ -110,14 +107,14 @@ So why is it not added?
 Mainly, because we have not gotten around to it.  We are wondering if
 this would increase the noise more than it should.
 
-## Tests:
+## Tests
 
 In the test directory is a sample file that has examples of the
 various possible cases that we examined and documented the expected
 cyclomatic complexity result.  If you find mistakes or missing tests
 please report them.
 
-## Contact:
+## Contact
 
 - Saikuro is written by Zev Blut (zb at ubit dot com)
 - Modified to work with ruby 1.9.3 - Max Schubert (perldork@webwizarddesign.com)
@@ -126,10 +123,14 @@ please report them.
 
 Thanks to Elbert Corpuz for writing the CSS for the HTML output!
 
-## Other metric tools for Ruby:
+## Other metric tools for Ruby
 
 Ryan Davis has an abc metric program as an example in his ParseTree
 product:  http://www.zenspider.com/ZSS/Products/ParseTree/
 
 The PMD project has a tool called CPD that can scan Ruby source code
 looking for source duplication:  http://pmd.sourceforge.net/
+
+## License
+
+Saikuro uses the BSD 3-part license.
