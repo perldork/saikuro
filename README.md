@@ -1,12 +1,12 @@
 ## Saikuro:
 
-Saikuro is a Ruby cyclomatic complexity analyzer.  When given Ruby
+[Saikuro][1] is a Ruby cyclomatic complexity analyzer.  When given Ruby
 source code Saikuro will generate a report listing the cyclomatic
 complexity of each method found.  In addition, Saikuro counts the
 number of lines per method and can generate a listing of the number of
 tokens on each line of code.
 
-** Forked from rubyforge.net by Max Schubert
+[1]: http://saikuro.rubyforge.net "Forked from rubyforge.net by Max Schubert"
 
 ## License:
 Saikuro uses the BSD license.
