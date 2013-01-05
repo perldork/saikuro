@@ -1,3 +1,5 @@
+require 'saikuro/version'
+
 # $Id: saikuro.rb 40 2008-06-21 05:44:13Z zev $
 # == Usage
 #
