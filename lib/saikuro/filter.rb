@@ -21,6 +21,10 @@ module Saikuro
       count >= @error
     end
 
+    def to_s
+      %{limit: #{ @limit }, warn: #{ @warn }, error: #{ @error }}
+    end
+
   end
 
 end
