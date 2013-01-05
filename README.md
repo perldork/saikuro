@@ -13,7 +13,7 @@ Saikuro uses the BSD license.
 
 ## Installation:
 
-gem install 'saikuro', :git => %{https://github/perldork/saikuro}
+    gem install 'saikuro', :git => %{https://github.com/perldork/saikuro}
 
 ## Usage:
 
@@ -21,7 +21,7 @@ Saikuro is a command line program.
 Running "saikuro -h" will output a usage statement describing all
 the various arguments you can pass to it.
 
-saikuro -c -p tests/samples.rb
+    saikuro -c -p tests/samples.rb
 
 The above command is a simple example that generates a cyclomatic
 complexity report on the samples.rb file, using the default filter,
@@ -30,7 +30,7 @@ directory.
 
 A more detailed example is
 
-saikuro -c -t -i tests -y 0 -w 11 -e 16 -o out/
+    saikuro -c -t -i tests -y 0 -w 11 -e 16 -o out/
 
 This will analyze all Ruby files found in the "tests/" directory.
 Saikuro will generate a token count report and a cyclomatic complexity
@@ -85,6 +85,7 @@ McCabe's paper listed above suggests doing so.
 
 Example for "and" operator handling:
 
+```ruby
  # Starting values for case 1 and 2
  x = false
  y = 15
@@ -99,6 +100,7 @@ Example for "and" operator handling:
  puts "W" if ((q = y) && (r = x))
  puts r # => false
  puts q # => 15
+```
 
 Case 1 illustrates why "and" operators should add to a method's
 complexity, because the result of ( r = x ) is false the if statement
