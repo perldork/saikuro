@@ -1,7 +1,4 @@
-saikuro
-=======
-
-Fork of Zev Blut's cyclomatic coplexity tool for ruby - fixing option parsingVersion 0.2
+Version 0.2
 
 Saikuro:
 Saikuro is a Ruby cyclomatic complexity analyzer.  When given Ruby
