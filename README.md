@@ -18,7 +18,7 @@ Saikuro is a command line program.
 Running "saikuro -h" will output a usage statement describing all
 the various arguments you can pass to it.
 
-    saikuro -c -i tests/samples.rb
+    saikuro -c -i ./tests/samples.rb
 
 The above command is a simple example that generates a cyclomatic
 complexity report on the samples.rb file, using the default filter,
@@ -27,7 +27,7 @@ directory.
 
 A more detailed example is
 
-    saikuro -c -t -D tests -w 0 -W 11 -E 16 -o out/
+    saikuro -c -t -D ./tests/ -w 0 -W 11 -E 16 -o out/
 
 This will analyze all Ruby files found in the "tests/" directory.
 Saikuro will generate a token count report and a cyclomatic complexity
