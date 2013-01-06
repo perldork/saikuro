@@ -131,30 +131,22 @@ module Saikuro
       complexity_formatter = nil
       token_count_formatter = nil
 
-      if options[ :formatter ] == %{html}
-
-        if options[ :compute_complexity ]
-          complexity_formatter = \
+      if options[ :compute_complexity ]
+        complexity_formatter = case options[ :formatter ]
+          when %{html}
             Formatter::StateHTMLComplexity.new( STDOUT, options[ :complexity_filter ] )
-        end
-
-        if options[ :compute_tokens ]
-          token_count_formatter = \
-            Formatter::HTMLTokenCounter.new( STDOUT, options[ :token_filter ] )
-        end
-
-      else
-
-        if options[ :compute_complexity ]
-          complexity_formatter = \
+          else
             Formatter::ParseState.new( STDOUT, options[ :complexity_filter ] )
-        end
+          end
+      end
 
-        if options[ :compute_tokens ]
-          token_count_formatter = \
-            Formatter::TokenCounter.new( STDOUT, options[ :token_filter ] )
-        end
-
+      if options[ :compute_tokens ]
+        token_count_formatter = case options[ :formatter ]
+          when %{html}
+              Formatter::HTMLTokenCounter.new( STDOUT, options[ :token_filter ] )
+          else
+              Formatter::TokenCounter.new( STDOUT, options[ :token_filter ] )
+          end
       end
 
       return complexity_formatter, token_count_formatter
