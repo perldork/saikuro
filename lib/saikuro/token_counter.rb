@@ -335,12 +335,6 @@ module Saikuro
       if @parent.nil?
         STDOUT.puts "DEBUG: Line #{@lexer.line_no}"
         STDOUT.puts "DEBUG: #{@name}; #{self.class}"
-        # to_yaml can cause an infinite loop?
-        #STDOUT.puts "TOP: #{@@top_state.to_yaml}"
-        #STDOUT.puts "TOP: #{@@top_state.inspect}"
-
-        # This may not be an error?
-        #exit 1
       end
     end
 
@@ -605,7 +599,7 @@ module Saikuro
             File.open("#{output_dir}/#{fname}","w") do |f|
               f.write state_io.string
             end
-            idx_states<< [
+            idx_states << [
               fname,
               state_formater.warnings.dup,
               state_formater.errors.dup,
@@ -619,11 +613,11 @@ module Saikuro
             token_count_formater.end
 
             fname = "#{file}_token.html"
-            puts "writing token #{file}" if $VERBOSE
+            STDOUT.puts "writing token #{file}" if $VERBOSE
             File.open("#{output_dir}/#{fname}","w") do |f|
               f.write token_io.string
             end
-            idx_tokens<< [
+            idx_tokens << [
               fname,
               token_count_formater.warnings.dup,
               token_count_formater.errors.dup,

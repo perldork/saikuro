@@ -71,77 +71,82 @@ module Saikuro
       def HTMLStyleSheet.style_sheet
         out = StringIO.new
 
-        out.puts "<style>"
-        out.puts 'body {'
-        out.puts '	margin: 20px;'
-        out.puts '	padding: 0;'
-        out.puts '	font-size: 12px;'
-        out.puts '	font-family: bitstream vera sans, verdana, arial, sans serif;'
-        out.puts '	background-color: #efefef;'
-        out.puts '}'
-        out.puts ''
-        out.puts 'table {	'
-        out.puts '	border-collapse: collapse;'
-        out.puts '	/*border-spacing: 0;*/'
-        out.puts '	border: 1px solid #666;'
-        out.puts '	background-color: #fff;'
-        out.puts '	margin-bottom: 20px;'
-        out.puts '}'
-        out.puts ''
-        out.puts 'table, th, th+th, td, td+td  {'
-        out.puts '	border: 1px solid #ccc;'
-        out.puts '}'
-        out.puts ''
-        out.puts 'table th {'
-        out.puts '	font-size: 12px;'
-        out.puts '	color: #fc0;'
-        out.puts '	padding: 4px 0;'
-        out.puts '	background-color: #336;'
-        out.puts '}'
-        out.puts ''
-        out.puts 'th, td {'
-        out.puts '	padding: 4px 10px;'
-        out.puts '}'
-        out.puts ''
-        out.puts 'td {	'
-        out.puts '	font-size: 13px;'
-        out.puts '}'
-        out.puts ''
-        out.puts '.class_name {'
-        out.puts '	font-size: 17px;'
-        out.puts '	margin: 20px 0 0;'
-        out.puts '}'
-        out.puts ''
-        out.puts '.class_complexity {'
-        out.puts 'margin: 0 auto;'
-        out.puts '}'
-        out.puts ''
-        out.puts '.class_complexity>.class_complexity {'
-        out.puts '	margin: 0;'
-        out.puts '}'
-        out.puts ''
-        out.puts '.class_total_complexity, .class_total_lines, .start_token_count, .file_count {'
-        out.puts '	font-size: 13px;'
-        out.puts '	font-weight: bold;'
-        out.puts '}'
-        out.puts ''
-        out.puts '.class_total_complexity, .class_total_lines {'
-        out.puts '	color: #c00;'
-        out.puts '}'
-        out.puts ''
-        out.puts '.start_token_count, .file_count {'
-        out.puts '	color: #333;'
-        out.puts '}'
-        out.puts ''
-        out.puts '.warning {'
-        out.puts '	background-color: yellow;'
-        out.puts '}'
-        out.puts ''
-        out.puts '.error {'
-        out.puts '	background-color: #f00;'
-        out.puts '}'
-        out.puts "</style>"
+        out.puts %{
+          <style type="text/css">
+            body {
+              margin: 20px;
+              padding: 0;
+              font-size: 12px;
+              font-family: bitstream vera sans, verdana, arial, sans serif;
+              background-color: #efefef;
+            }
 
+            table {	
+              border-collapse: collapse;
+              /*border-spacing: 0;*/
+              width: 80%;
+              min-width: 600px;
+              align: center;
+              border: 1px solid #666;
+              background-color: #fff;
+              margin-bottom: 20px;
+            }
+
+            table, th, th+th, td, td+td  {
+              border: 1px solid #ccc;
+            }
+
+            table th {
+              font-size: 12px;
+              color: #333;
+              padding: 4px 0;
+              background-color: #aaa;
+            }
+
+            th, td {
+              padding: 4px 10px;
+            }
+
+            td {	
+              font-size: 13px;
+            }
+
+            .class_name {
+              font-size: 17px;
+              margin: 20px 0 0;
+            }
+
+            .class_complexity {
+            margin: 0 auto;
+            }
+
+            .class_complexity, .class_complexity {
+              margin: 0;
+            }
+
+            .class_total_complexity, .class_total_lines, .start_token_count, .file_count {
+              font-size: 13px;
+              font-weight: bold;
+            }
+
+            .class_total_complexity, .class_total_lines {
+              color: #e00;
+            }
+
+            .start_token_count, .file_count {
+              color: #333;
+            }
+
+            .warning {
+              background-color: #FAFCAC;
+            }
+
+            .error {
+              background-color: #F2C7CC;
+            }
+          </style>
+
+        }
         out.string
       end
 
@@ -157,31 +162,41 @@ module Saikuro
       def start(new_out=nil)
         reset_data
         @out = new_out if new_out
-        @out.puts "<html>"
-        @out.puts style_sheet
-        @out.puts "<body>"
+        @out.puts %{
+          <html>
+          #{ style_sheet }
+          <body>
+        }
       end
 
       def start_count(number_of_files)
-        @out.puts "<div class=\"start_token_count\">"
-        @out.puts "Number of files: #{number_of_files}"
-        @out.puts "</div>"
+        @out.puts %{
+          <div class="start_token_count">
+          Number of files: #{number_of_files}
+          </div>
+        }
       end
 
       def start_file(file_name)
         @current = file_name
-        @out.puts "<div class=\"file_count\">"
-        @out.puts "<p class=\"file_name\">"
-        @out.puts "File: #{file_name}"
-        @out.puts "</p>"
-        @out.puts "<table width=\"100%\" border=\"1\">"
-        @out.puts "<tr><th>Line</th><th>Tokens</th></tr>"
+        @out.puts %{
+          <div class="file_count">
+          <p class="file_name">File: #{file_name}</p>
+          <table>
+          <tr>
+            <th>Line</th><th>Tokens</th>
+          </tr>
+        }
       end
 
       def line_token_count(line_number,number_of_tokens)
         return if @filter.ignore?(number_of_tokens)
         klass = warn_error?(number_of_tokens, line_number)
-        @out.puts "<tr><td>#{line_number}</td><td#{klass}>#{number_of_tokens}</td></tr>"
+        @out.puts %{
+          <tr>
+            <td>#{line_number}</td><td#{klass}>#{number_of_tokens}</td>
+          </tr>
+        }
       end
 
       def end_file
@@ -192,8 +207,10 @@ module Saikuro
       end
 
       def end
-        @out.puts "</body>"
-        @out.puts "</html>"
+        @out.puts %{
+          </body>
+        </html>
+        }
       end
     end
 
@@ -231,29 +248,41 @@ module Saikuro
       def start(new_out=nil)
         reset_data
         @out = new_out if new_out
-        @out.puts "<html><head><title>Cyclometric Complexity</title></head>"
-        @out.puts style_sheet
-        @out.puts "<body>"
+        @out.puts %{
+         <html>
+           <head><title>Cyclometric Complexity</title>
+             #{ style_sheet }
+           </head>
+        <body>
+        }
       end
 
       def end
-        @out.puts "</body>"
-        @out.puts "</html>"
+        @out.puts %{
+          </body>
+        </html>
+        }
       end
 
       def start_class_compute_state(type_name,name,complexity,lines)
         @current = name
-        @out.puts "<div class=\"class_complexity\">"
-        @out.puts "<h2 class=\"class_name\">#{type_name} : #{name}</h2>"
-        @out.puts "<div class=\"class_total_complexity\">Total Complexity: #{complexity}</div>"
-        @out.puts "<div class=\"class_total_lines\">Total Lines: #{lines}</div>"
-        @out.puts "<table width=\"100%\" border=\"1\">"
-        @out.puts "<tr><th>Method</th><th>Complexity</th><th># Lines</th></tr>"
+        @out.puts %{
+          <div class="class_complexity">
+          <h2 class="class_name">#{type_name} : #{name}</h2>
+          <div class="class_total_complexity">Total Complexity: #{complexity}</div>
+          <div class="class_total_lines">Total Lines: #{lines}</div>
+          <table>
+          <tr>
+            <th>Method</th><th>Complexity</th><th># Lines</th>
+          </tr>
+        }
       end
 
       def end_class_compute_state(name)
-        @out.puts "</table>"
-        @out.puts "</div>"
+        @out.puts %{
+            </table>
+          </div>
+        }
       end
 
       def def_compute_state(name, complexity, lines)
@@ -279,14 +308,14 @@ module Saikuro
         end
       end
 
-      f.puts "<h2 class=\"class_name\">Errors and Warnings</h2>"
-      f.puts "<table width=\"100%\" border=\"1\">"
-      f.puts header
-
-      f.puts self.print_summary_table_rows(erval, "error")
-      f.puts self.print_summary_table_rows(wval, "warning")
-      f.puts "</table>"
-
+      f.puts %{
+        <h2 class="class_name">Errors and Warnings</h2>
+        <table>
+          #{ header }
+          #{ self.print_summary_table_rows(erval, "error")  }
+          #{ self.print_summary_table_rows(wval, "warning") }
+        </table>
+      }
       f.string
     end
 
@@ -294,8 +323,13 @@ module Saikuro
       f = StringIO.new
       ewvals.sort { |a,b| b <=> a}.each do |v, vals|
         vals.sort.each do |fname, c, m|
-          f.puts "<tr><td><a href=\"./#{fname}\">#{c}</a></td><td>#{m}</td>"
-          f.puts "<td class=\"#{klass_type}\">#{v}</td></tr>"
+          f.puts %{
+            <tr>
+              <td><a href="./#{fname}">#{c}</a></td>
+              <td>#{m}</td>
+              <td class="#{klass_type}">#{v}</td>
+            </tr>
+          }
         end
       end
       f.string
@@ -303,15 +337,21 @@ module Saikuro
 
     def self.list_analyzed_files(files)
       f = StringIO.new
-      f.puts "<h2 class=\"class_name\">Analyzed Files</h2>"
-      f.puts "<ul>"
+      f.puts %{
+        <h2 class="class_name">Analyzed Files</h2>
+        <ul>
+      }
       files.each do |fname, warnings, errors|
         readname = fname.split("_")[0...-1].join("_")
-        f.puts "<li>"
-        f.puts "<p class=\"file_name\"><a href=\"./#{fname}\">#{readname}</a>"
-        f.puts "</li>"
+        f.puts %{
+            <li>
+              <p class="file_name"><a href="./#{fname}">#{readname}</a></p>
+            </li>
+        }
       end
-      f.puts "</ul>"
+      f.puts %{
+        </ul>
+      }
       f.string
     end
 
@@ -319,34 +359,41 @@ module Saikuro
       return if files.empty?
 
       File.open(filename,"w") do |f|
-        f.puts "<html><head><title>#{title}</title></head>"
-        f.puts "#{HTMLStyleSheet.style_sheet}\n<body>"
-        f.puts "<h1>#{title}</h1>"
-
-        enw = files.find_all { |fn,w,e| (!w.empty? || !e.empty?) }
-
-        f.puts self.summarize_errors_and_warnings(enw, header)
-
-        f.puts "<hr/>"
-        f.puts self.list_analyzed_files(files)
-        f.puts "</body></html>"
+        f.puts %{
+          <html>
+            <head>
+              <title>#{title}</title>
+                #{HTMLStyleSheet.style_sheet}
+            </head>
+            <body>
+              <h1>#{title}</h1>
+              #{
+                enw = files.find_all { |fn,w,e| (!w.empty? || !e.empty?) }
+                self.summarize_errors_and_warnings(enw, header)
+              }
+              <hr/>
+              #{ self.list_analyzed_files(files) }
+            </body>
+         </html>
+        }
       end
+
     end
 
     def self.write_cyclo_index(files, output_dir)
-      header = "<tr><th>Class</th><th>Method</th><th>Complexity</th></tr>"
-      self.write_index(files,
-                  "#{output_dir}/index_cyclo.html",
-                  "Index for cyclomatic complexity",
-                  header)
+      header = %{<tr><th>Class</th><th>Method</th><th>Complexity</th></tr>}
+      self.write_index( files,
+                        "#{output_dir}/index_cyclo.html",
+                        "Index for cyclomatic complexity",
+                        header )
     end
 
     def self.write_token_index(files, output_dir)
-      header = "<tr><th>File</th><th>Line #</th><th>Tokens</th></tr>"
-      self.write_index(files,
-                  "#{output_dir}/index_token.html",
-                  "Index for tokens per line",
-                  header)
+      header = %{<tr><th>File</th><th>Line #</th><th>Tokens</th></tr>}
+      self.write_index( files,
+                        "#{output_dir}/index_token.html",
+                        "Index for tokens per line",
+                        header )
     end
 
   end
