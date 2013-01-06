@@ -27,11 +27,11 @@ directory.
 
 A more detailed example is
 
-    saikuro -c -t -D ./tests/ -w 0 -W 11 -E 16 -o out/
+    saikuro -c -t -D ./tests/ -C 0 -w 11 -e 16 -o out/
 
 This will analyze all Ruby files found in the "tests/" directory.
 Saikuro will generate a token count report and a cyclomatic complexity
-report in the "out" directory .  The "-y 0" command will turn off
+report in the "out" directory .  The "-C 0" command will turn off complexity
 filtering and thus show the complexity of all methods.  The "-w 11"
 will mark all methods with a complexity of 11 or higher with a
 warning.  Finally, "-e 16" will flag all methods with a complexity of
