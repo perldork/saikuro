@@ -13,6 +13,8 @@ module Saikuro
   # * Run token / cyclomatic complexity tests
   # * Output results
 
+  POSITIVE_INTEGERS = /^(?:[1-9][0-9]*)$/
+
   class CLI
 
     def self.get_ruby_files( path )
@@ -41,7 +43,7 @@ module Saikuro
                       %{[ -C, -w, -e, -T, -W, -E - number ] ( -i file | -D directory ) }
 
         opts.on(
-          %{-o}, %{--output_directory [DIRECTORY]}, String,
+          %{-o}, %{--output_directory DIRECTORY}, String,
           %{A directory to output the results in.},
           %{The current directory is used if this},
           %{option is not present} 
@@ -49,8 +51,8 @@ module Saikuro
           options[ :output_directory ] = directory_name
         end
 
-        opts.on( %{-f}, %{--formatter ( html | text )}, [:html, :text],
-                 %{The format to output the results in - defaults to HTML.} ) do |format|
+        opts.on( %{-f}, %{--formatter FORMAT}, [:html, :text],
+                 %{The format to output the results in - html or text; defaults to HTML.} ) do |format|
           options[ :formatter ] = format
         end
 
@@ -62,55 +64,55 @@ module Saikuro
           options[ :compute_tokens ] = true
         end
 
-        opts.on( %{-C}, %{--filter-cyclo [NUMBER]},
-                 [ 1 ... 1000 ],
+
+        opts.on( %{-C}, %{--filter-cyclo NUMBER},
+                 POSITIVE_INTEGERS,
                  %{Filter the output to only include methods whose complexity is greater } +
                  %{than the passed number.} ) do |cyclomatic_threshold|
           options[ :complexity_filter ].limit = cyclomatic_threshold.to_i
         end
 
-        opts.on( %{-w}, %{--warn-cyclo [NUMBER]},
-                 [ 1 ... 1000 ],
+        opts.on( %{-w}, %{--warn-cyclo NUMBER},
+                 POSITIVE_INTEGERS,
                  %{Highlight with a warning methods whose cyclomatic complexity is greater } +
                  %{than or equal to the passed number.} ) do |cyclomatic_warning_threshold|
           options[ :complexity_filter ].warn = cyclomatic_warning_threshold.to_i
         end
 
-        opts.on( %{-e}, %{--error-cyclo [NUMBER]},
-                 1 ... 1000,
+        opts.on( %{-e}, %{--error-cyclo NUMBER},
+                 POSITIVE_INTEGERS,
                  %{Highlight with an error methods whose cyclomatic complexity is greater } +
                  %{than or equal to the passed number.} ) do |cyclomatic_error_threshold|
           options[ :complexity_filter ].error = cyclomatic_error_threshold.to_i
         end
 
-        opts.on( %{-T}, %{--filter-token [NUMBER]},
-                 1 ... 1000,
+        opts.on( %{-T}, %{--filter-token NUMBER},
+                 POSITIVE_INTEGERS,
                  %{Filter the output to only include methods whose token count is greater } +
                  %{than the passed number.} ) do |token_count_threshold|
           options[ :token_filter ].limit = token_count_threshold.to_i
         end
 
-        opts.on( %{-W}, %{--warn-token [NUMBER]},
-                 1 ... 1000,
-                 %{Highlight with a warning methods whose token count is greater } +
+        opts.on( %{-W}, %{--warn-token NUMBER},
+                 POSITIVE_INTEGERS,
+                 %{Highlight with a warning methods whose token count is greater },
                  %{than or equal to the passed number.} ) do |token_warning_threshold|
-          token_threshold.warn = token_warn.to_i
           options[ :token_filter ].warn = token_warning_threshold.to_i
         end
 
-        opts.on( %{-E}, %{--error-token [NUMBER]},
-                 1 ... 1000,
+        opts.on( %{-E}, %{--error-token NUMBER},
+                 POSITIVE_INTEGERS,
                  %{Highlight with an error methods whose token count is greater } +
                  %{than or equal to the passed number.} ) do |token_error_threshold|
           options[ :token_filter ].error = token_error_threshold.to_i
         end
 
-        opts.on( %{-i}, %{--input-file [path/to/file]}, String,
+        opts.on( %{-i}, %{--input-file path/to/file}, String,
                  %{Read input from file (may specify multiple times} ) do |file_name|
           options[ :files ] << file_name
         end
 
-        opts.on( %{-D}, %{--input-directory [path/to/directory]}, String,
+        opts.on( %{-D}, %{--input-directory path/to/directory}, String,
                  %{Read all ruby files found under directory} ) do |file_name|
           options[ :files ].concat get_ruby_files( file_name )
         end

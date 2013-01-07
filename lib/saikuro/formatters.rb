@@ -68,17 +68,19 @@ module Saikuro
     end
 
     module HTMLStyleSheet
-      def HTMLStyleSheet.style_sheet
-        out = StringIO.new
 
-        out.puts %{
-          <style type="text/css">
+      def self.css_name
+        %{styles.css}
+      end
+
+      def HTMLStyleSheet.style_sheet
+        %{
             body {
               margin: 20px;
               padding: 0;
               font-size: 12px;
               font-family: bitstream vera sans, verdana, arial, sans serif;
-              background-color: #efefef;
+              background-color: #eee;
             }
 
             table {	
@@ -100,7 +102,7 @@ module Saikuro
               font-size: 12px;
               color: #333;
               padding: 4px 0;
-              background-color: #aaa;
+              background-color: #ccc;
             }
 
             th, td {
@@ -144,10 +146,8 @@ module Saikuro
             .error {
               background-color: #F2C7CC;
             }
-          </style>
 
         }
-        out.string
       end
 
       def style_sheet
@@ -157,6 +157,7 @@ module Saikuro
 
 
     class HTMLTokenCounter < TokenCounter
+
       include HTMLStyleSheet
 
       def start(new_out=nil)
@@ -164,7 +165,9 @@ module Saikuro
         @out = new_out if new_out
         @out.puts %{
           <html>
-          #{ style_sheet }
+          <head>
+            <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.css_name }"/>
+          </head>
           <body>
         }
       end
@@ -250,8 +253,9 @@ module Saikuro
         @out = new_out if new_out
         @out.puts %{
          <html>
-           <head><title>Cyclometric Complexity</title>
-             #{ style_sheet }
+           <head>
+             <title>Cyclometric Complexity</title>
+             <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.css_name }"/>
            </head>
         <body>
         }
@@ -363,7 +367,7 @@ module Saikuro
           <html>
             <head>
               <title>#{title}</title>
-                #{HTMLStyleSheet.style_sheet}
+              <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.css_name }" />
             </head>
             <body>
               <h1>#{title}</h1>
@@ -380,12 +384,19 @@ module Saikuro
 
     end
 
+    def self.write_stylesheet( file_name )
+      File.open( file_name, %{w} ) do|f|
+        f.puts HTMLStyleSheet.style_sheet
+      end
+    end
+
     def self.write_cyclo_index(files, output_dir)
       header = %{<tr><th>Class</th><th>Method</th><th>Complexity</th></tr>}
       self.write_index( files,
                         "#{output_dir}/index_cyclo.html",
                         "Index for cyclomatic complexity",
                         header )
+      self.write_stylesheet( %{#{output_dir}/#{ HTMLStyleSheet.css_name }} )
     end
 
     def self.write_token_index(files, output_dir)
@@ -394,6 +405,7 @@ module Saikuro
                         "#{output_dir}/index_token.html",
                         "Index for tokens per line",
                         header )
+      self.write_stylesheet( %{#{output_dir}/#{ HTMLStyleSheet.css_name }} )
     end
 
   end
