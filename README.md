@@ -18,7 +18,7 @@ Saikuro is a command line program.
 Running "saikuro -h" will output a usage statement describing all
 the various arguments you can pass to it.
 
-    saikuro -c -p tests/samples.rb
+    saikuro -c -i ./tests/samples.rb
 
 The above command is a simple example that generates a cyclomatic
 complexity report on the samples.rb file, using the default filter,
@@ -27,11 +27,11 @@ directory.
 
 A more detailed example is
 
-    saikuro -c -t -i tests -y 0 -w 11 -e 16 -o out/
+    saikuro -c -t -D ./tests/ -C 0 -w 11 -e 16 -o out/
 
 This will analyze all Ruby files found in the "tests/" directory.
 Saikuro will generate a token count report and a cyclomatic complexity
-report in the "out" directory .  The "-y 0" command will turn off
+report in the "out" directory .  The "-C 0" command will turn off complexity
 filtering and thus show the complexity of all methods.  The "-w 11"
 will mark all methods with a complexity of 11 or higher with a
 warning.  Finally, "-e 16" will flag all methods with a complexity of
