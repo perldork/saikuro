@@ -46,7 +46,7 @@ module Saikuro
 
       def start_file(file_name)
         @current = file_name
-        @out.puts "File:#{file_name}"
+        @out.puts "file_name}"
       end
 
       def line_token_count(line_number,number_of_tokens)
@@ -69,11 +69,21 @@ module Saikuro
 
     module HTMLStyleSheet
 
+      @@file_name = nil
+
+      def self.file_name=( new_name )
+        @@file_name = new_name
+      end
+
+      def self.file_name
+        @@file_name.gsub( /\/+/, %{/} )
+      end
+
       def self.css_name
         %{styles.css}
       end
 
-      def HTMLStyleSheet.style_sheet
+      def self.style_sheet
         %{
             body {
               margin: 20px;
@@ -150,9 +160,6 @@ module Saikuro
         }
       end
 
-      def style_sheet
-        HTMLStyleSheet.style_sheet
-      end
     end
 
 
@@ -166,7 +173,7 @@ module Saikuro
         @out.puts %{
           <html>
           <head>
-            <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.css_name }"/>
+            <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.file_name }"/>
           </head>
           <body>
         }
@@ -184,7 +191,7 @@ module Saikuro
         @current = file_name
         @out.puts %{
           <div class="file_count">
-          <p class="file_name">File: #{file_name}</p>
+          <p class="file_name">{file_name}</p>
           <table>
           <tr>
             <th>Line</th><th>Tokens</th>
@@ -255,7 +262,7 @@ module Saikuro
          <html>
            <head>
              <title>Cyclometric Complexity</title>
-             <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.css_name }"/>
+             <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.file_name }"/>
            </head>
         <body>
         }
@@ -367,7 +374,7 @@ module Saikuro
           <html>
             <head>
               <title>#{title}</title>
-              <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.css_name }" />
+              <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.file_name }" />
             </head>
             <body>
               <h1>#{title}</h1>
@@ -392,20 +399,20 @@ module Saikuro
 
     def self.write_cyclo_index(files, output_dir)
       header = %{<tr><th>Class</th><th>Method</th><th>Complexity</th></tr>}
+      self.write_stylesheet( HTMLStyleSheet.file_name )
       self.write_index( files,
                         "#{output_dir}/index_cyclo.html",
                         "Index for cyclomatic complexity",
                         header )
-      self.write_stylesheet( %{#{output_dir}/#{ HTMLStyleSheet.css_name }} )
     end
 
     def self.write_token_index(files, output_dir)
       header = %{<tr><th>File</th><th>Line #</th><th>Tokens</th></tr>}
+      self.write_stylesheet( HTMLStyleSheet.file_name )
       self.write_index( files,
                         "#{output_dir}/index_token.html",
                         "Index for tokens per line",
                         header )
-      self.write_stylesheet( %{#{output_dir}/#{ HTMLStyleSheet.css_name }} )
     end
 
   end

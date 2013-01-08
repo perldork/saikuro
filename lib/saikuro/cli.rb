@@ -4,6 +4,7 @@ module Saikuro
   require 'optparse'
   require 'fileutils'
   require 'find'
+  require 'pathname'
 
   require 'saikuro/filter'
   require 'saikuro/formatters'
@@ -158,6 +159,12 @@ module Saikuro
     def self.run( args )
 
       options = parse_cli_options( args )
+
+      if options[ :formatter ] == %{html}
+        real_path = Pathname.new( options[ :output_directory ] ).realpath
+        Formatter::HTMLStyleSheet.file_name = \
+          %{#{ real_path }/#{ Formatter::HTMLStyleSheet.css_name }}
+      end
 
       complexity_formatter, token_count_formatter = choose_formatters( options )
 
