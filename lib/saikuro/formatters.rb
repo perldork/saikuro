@@ -345,7 +345,7 @@ module Saikuro
         vals.sort.each do |fname, c, m|
           f.puts %{
             <tr>
-              <td><a href=".#{fname}">#{c}</a></td>
+              <td><a href="#{fname.gsub( %r{^/}, %{./} )}">#{c}</a></td>
               <td>#{m}</td>
               <td class="#{klass_type}">#{v}</td>
             </tr>
