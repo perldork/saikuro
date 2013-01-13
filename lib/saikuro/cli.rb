@@ -31,7 +31,7 @@ module Saikuro
       options = {
         files:              Array.new,
         output_directory:   %{./},
-        formatter:          %{html},
+        formatter:          :html,
         complexity_filter:  Filter.new( 5 ),
         token_filter:       Filter.new( 10, 25, 50 ),
         compute_complexity: false,
@@ -52,8 +52,9 @@ module Saikuro
           options[ :output_directory ] = directory_name
         end
 
-        opts.on( %{-f}, %{--formatter FORMAT}, [:html, :text],
-                 %{The format to output the results in - html or text; defaults to HTML.} ) do |format|
+        opts.on( %{-f}, %{--formatter FORMAT}, [ :html ],
+                 %{The format to output the results in - HTML currently only } +
+                 %{supported format.} ) do |format|
           options[ :formatter ] = format
         end
 
@@ -122,9 +123,15 @@ module Saikuro
           $VERBOSE = true
         end
 
+
       end
 
       opts.parse( args )
+
+      if options[ :files ].empty?
+        opts.abort( %{Must specify either an input file or input directory with files to parse!} )
+      end
+
       options
 
     end
@@ -136,7 +143,7 @@ module Saikuro
 
       if options[ :compute_complexity ]
         complexity_formatter = case options[ :formatter ]
-          when %{html}
+          when :html
             Formatter::StateHTMLComplexity.new( STDOUT, options[ :complexity_filter ] )
           else
             Formatter::ParseState.new( STDOUT, options[ :complexity_filter ] )
@@ -145,7 +152,7 @@ module Saikuro
 
       if options[ :compute_tokens ]
         token_count_formatter = case options[ :formatter ]
-          when %{html}
+          when :html
               Formatter::HTMLTokenCounter.new( STDOUT, options[ :token_filter ] )
           else
               Formatter::TokenCounter.new( STDOUT, options[ :token_filter ] )
@@ -160,7 +167,10 @@ module Saikuro
 
       options = parse_cli_options( args )
 
-      if options[ :formatter ] == %{html}
+      FileUtils.makedirs( options[ :output_directory ] ) \
+        unless Dir.exists? options[ :output_directory ]
+
+      if options[ :formatter ] == :html
         real_path = Pathname.new( options[ :output_directory ] ).realpath
         Formatter::HTMLStyleSheet.file_name = \
           %{#{ real_path }/#{ Formatter::HTMLStyleSheet.css_name }}
@@ -168,13 +178,12 @@ module Saikuro
 
       complexity_formatter, token_count_formatter = choose_formatters( options )
 
-      idx_states, idx_tokens = Saikuro.analyze( options[ :files ],
+      idx_cyclo, idx_tokens = Saikuro.analyze( options[ :files ],
                                                 complexity_formatter,
                                                 token_count_formatter,
                                                 options[ :output_directory ] )
 
-      Formatter.write_cyclo_index(idx_states, options[ :output_directory ] )
-      Formatter.write_token_index(idx_tokens, options[ :output_directory ] )
+      Formatter.write_results( options[ :output_directory ], idx_cyclo, idx_tokens )
 
     end
 

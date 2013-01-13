@@ -75,8 +75,14 @@ module Saikuro
         @@file_name = new_name
       end
 
-      def self.file_name
-        @@file_name.gsub( /\/+/, %{/} )
+      # Return name relative to passed in file if file is passed
+      # in to make relative CSS reference paths
+      def self.file_name( dest_file = nil )
+        return @@file_name if dest_file.nil?
+        css_path = @@file_name.match( %r{^.*/})[ 0 ]
+        css_file = @@file_name.match( %r{/([^/]+)$})[ 0 ]
+        file_path = dest_file.gsub( css_path, %{} )
+        file_path.gsub( %r{/[^/]+$}, css_file ).gsub( %r{[^/]+?/}, %{../} ).sub( %r{..//?}, %{./} )
       end
 
       def self.css_name
@@ -173,7 +179,7 @@ module Saikuro
         @out.puts %{
           <html>
           <head>
-            <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.file_name }"/>
+            <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.file_name( @out.path + '/dummy.txt' )}"/>
           </head>
           <body>
         }
@@ -262,7 +268,7 @@ module Saikuro
          <html>
            <head>
              <title>Cyclometric Complexity</title>
-             <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.file_name }"/>
+             <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.file_name( @out.path ) }"/>
            </head>
         <body>
         }
@@ -366,53 +372,47 @@ module Saikuro
       f.string
     end
 
-    def self.write_index(files, filename, title, header)
-      return if files.empty?
-
-      File.open(filename,"w") do |f|
-        f.puts %{
-          <html>
-            <head>
-              <title>#{title}</title>
-              <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.file_name }" />
-            </head>
-            <body>
-              <h1>#{title}</h1>
-              #{
-                enw = files.find_all { |fn,w,e| (!w.empty? || !e.empty?) }
-                self.summarize_errors_and_warnings(enw, header)
-              }
-              <hr/>
-              #{ self.list_analyzed_files(files) }
-            </body>
-         </html>
-        }
-      end
-
-    end
-
     def self.write_stylesheet( file_name )
       File.open( file_name, %{w} ) do|f|
         f.puts HTMLStyleSheet.style_sheet
       end
     end
 
-    def self.write_cyclo_index(files, output_dir)
-      header = %{<tr><th>Class</th><th>Method</th><th>Complexity</th></tr>}
-      self.write_stylesheet( HTMLStyleSheet.file_name )
-      self.write_index( files,
-                        "#{output_dir}/index_cyclo.html",
-                        "Index for cyclomatic complexity",
-                        header )
-    end
+    def self.write_results( output_dir, cyclo_files, token_files )
 
-    def self.write_token_index(files, output_dir)
-      header = %{<tr><th>File</th><th>Line #</th><th>Tokens</th></tr>}
       self.write_stylesheet( HTMLStyleSheet.file_name )
-      self.write_index( files,
-                        "#{output_dir}/index_token.html",
-                        "Index for tokens per line",
-                        header )
+
+      index_file = output_dir + %{/index.html}
+
+      File.open( index_file, %{w} ) do |index|
+          cyclo_header = %{<tr><th>Class</th><th>Method</th><th>Complexity</th></tr>}
+          token_header = %{<tr><th>File</th><th>Line #</th><th>Tokens</th></tr>}
+          index.puts <<-eof
+          <html>
+            <head>
+              <title>Saikuro :: Results</title>
+              <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.file_name( index_file ) }" />
+            </head>
+            <body>
+              <h1>Cyclomatic Complexity</h1>
+              #{
+                enw = cyclo_files.find_all { |fn,w,e| (!w.empty? || !e.empty?) }
+                self.summarize_errors_and_warnings(enw, cyclo_header)
+              }
+              <hr/>
+              #{ self.list_analyzed_files(cyclo_files) }
+              <h1>Line Complexity - Token Count</h1>
+              #{
+                enw = token_files.find_all { |fn,w,e| (!w.empty? || !e.empty?) }
+                self.summarize_errors_and_warnings(enw, token_header)
+              }
+              <hr/>
+              #{ self.list_analyzed_files(token_files) }
+            </body>
+          </html>
+          eof
+      end
+
     end
 
   end

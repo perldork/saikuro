@@ -589,16 +589,13 @@ module Saikuro
 
           if state_formater
             # output results
-            state_io = StringIO.new
+            fname = "#{file}_cyclo.html"
+            puts "writing cyclomatic #{file}" if $VERBOSE
+            state_io = File.open("#{output_dir}/#{fname}","w")
             state_formater.start(state_io)
             top.compute_state(state_formater)
             state_formater.end
 
-            fname = "#{file}_cyclo.html"
-            puts "writing cyclomatic #{file}" if $VERBOSE
-            File.open("#{output_dir}/#{fname}","w") do |f|
-              f.write state_io.string
-            end
             idx_states << [
               fname,
               state_formater.warnings.dup,
@@ -607,16 +604,13 @@ module Saikuro
           end
 
           if token_count_formater
-            token_io = StringIO.new
+            fname = "#{file}_token.html"
+            STDOUT.puts "writing token #{file}" if $VERBOSE
+            token_io = File.open("#{output_dir}/#{fname}","w")
             token_count_formater.start(token_io)
             token_counter.list_tokens_per_line(token_count_formater)
             token_count_formater.end
 
-            fname = "#{file}_token.html"
-            STDOUT.puts "writing token #{file}" if $VERBOSE
-            File.open("#{output_dir}/#{fname}","w") do |f|
-              f.write token_io.string
-            end
             idx_tokens << [
               fname,
               token_count_formater.warnings.dup,
