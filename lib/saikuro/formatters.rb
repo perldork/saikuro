@@ -83,7 +83,9 @@ module Saikuro
         css_path = @@file_name.match( %r{^.*/})[ 0 ]
         css_file = @@file_name.match( %r{/([^/]+)$})[ 0 ]
         file_path = end_path.gsub( css_path, %{} ).gsub( %{^/}, %{} )
-        file_path.gsub( %r{/?[^/]+$}, css_file ).gsub( %r{[^/]+?/}, %{../} ).sub( %r{..//?}, %{./} )
+        file_path.gsub(
+          %r{/?[^/]+$}, css_file
+        ).gsub( %r{[^/]+?/}, %{../} ).sub( %r{..//?}, %{./} ).sub( %r{^/}, %{} )
       end
 
       def self.css_name
