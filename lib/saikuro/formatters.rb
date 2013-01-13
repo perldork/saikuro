@@ -79,14 +79,21 @@ module Saikuro
       # in to make relative CSS reference paths
       def self.file_name( dest_file = nil )
         return @@file_name if dest_file.nil?
-        end_path = dest_file
-        css_path = @@file_name.match( %r{^.*/})[ 0 ]
-        css_file = @@file_name.match( %r{/([^/]+)$})[ 0 ]
-        file_path = end_path.gsub( css_path, %{} ).gsub( %{^/}, %{} )
-        end_path = file_path.gsub(
-          %r{/?[^/]+$}, css_file
-        ).gsub( %r{[^/]+?/}, %{../} ).sub( %r{^/}, %{} )
-        end_path
+        end_path = Pathname.new( dest_file ).realpath.to_s
+        css_path = Pathname.new( @@file_name.match( %r{^.*/} )[ 0 ] ).realpath.to_s
+        css_file = @@file_name.match( %r{/([^/]+)$} )[ 1 ]
+        end_path.gsub!( css_path,  %{} )
+        backpath = %{../} * ( end_path.count( %{/} ) - 1 )
+        rel_css_path = backpath + css_file
+        if $VERBOSE
+          puts %{=========================}
+          puts %{CSS PATH:    } + css_path
+          puts %{CSS FILE:    } + css_file
+          puts %{END PATH:    } + end_path
+          puts %{BACK PATH:   } + backpath
+          puts %{REL CSS PATH } + rel_css_path
+        end
+        rel_css_path
       end
 
       def self.css_name
