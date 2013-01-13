@@ -83,9 +83,10 @@ module Saikuro
         css_path = @@file_name.match( %r{^.*/})[ 0 ]
         css_file = @@file_name.match( %r{/([^/]+)$})[ 0 ]
         file_path = end_path.gsub( css_path, %{} ).gsub( %{^/}, %{} )
-        file_path.gsub(
+        end_path = file_path.gsub(
           %r{/?[^/]+$}, css_file
-        ).gsub( %r{[^/]+?/}, %{../} ).sub( %r{..//?}, %{./} ).sub( %r{^/}, %{} )
+        ).gsub( %r{[^/]+?/}, %{../} ).sub( %r{^/}, %{} )
+        end_path
       end
 
       def self.css_name
@@ -182,7 +183,7 @@ module Saikuro
         @out.puts %{
           <html>
           <head>
-            <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.file_name( @out.path + '/dummy.txt' )}"/>
+            <link rel="stylesheet" type="text/css" href="#{ HTMLStyleSheet.file_name( @out.path )}"/>
           </head>
           <body>
         }
@@ -200,7 +201,7 @@ module Saikuro
         @current = file_name
         @out.puts %{
           <div class="file_count">
-          <p class="file_name">{file_name}</p>
+          <p class="file_name">#{file_name}</p>
           <table>
           <tr>
             <th>Line</th><th>Tokens</th>
@@ -390,7 +391,7 @@ module Saikuro
       File.open( index_file, %{w} ) do |index|
           cyclo_header = %{<tr><th>Class</th><th>Method</th><th>Complexity</th></tr>}
           token_header = %{<tr><th>File</th><th>Line #</th><th>Tokens</th></tr>}
-          index.puts <<-eof
+          index.puts <<-end_of_index
           <html>
             <head>
               <title>Saikuro :: Results</title>
@@ -413,7 +414,7 @@ module Saikuro
               #{ self.list_analyzed_files(token_files) }
             </body>
           </html>
-          eof
+          end_of_index
       end
 
     end
