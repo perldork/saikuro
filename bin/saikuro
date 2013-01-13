@@ -7,3 +7,5 @@ require 'saikuro'
 
 Saikuro::CLI.run( ARGV )
 
+exit 0
+
