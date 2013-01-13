@@ -50,6 +50,7 @@ module Saikuro
           %{option is not present} 
         ) do |directory_name|
           options[ :output_directory ] = directory_name
+          options[ :output_directory ].gsub!( %r{([^.])/$}, %q{\\1} )
         end
 
         opts.on( %{-f}, %{--formatter FORMAT}, [ :html ],

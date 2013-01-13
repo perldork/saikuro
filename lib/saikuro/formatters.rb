@@ -79,10 +79,11 @@ module Saikuro
       # in to make relative CSS reference paths
       def self.file_name( dest_file = nil )
         return @@file_name if dest_file.nil?
+        end_path = dest_file
         css_path = @@file_name.match( %r{^.*/})[ 0 ]
         css_file = @@file_name.match( %r{/([^/]+)$})[ 0 ]
-        file_path = dest_file.gsub( css_path, %{} )
-        file_path.gsub( %r{/[^/]+$}, css_file ).gsub( %r{[^/]+?/}, %{../} ).sub( %r{..//?}, %{./} )
+        file_path = end_path.gsub( css_path, %{} ).gsub( %{^/}, %{} )
+        file_path.gsub( %r{/?[^/]+$}, css_file ).gsub( %r{[^/]+?/}, %{../} ).sub( %r{..//?}, %{./} )
       end
 
       def self.css_name
@@ -342,7 +343,7 @@ module Saikuro
         vals.sort.each do |fname, c, m|
           f.puts %{
             <tr>
-              <td><a href="./#{fname}">#{c}</a></td>
+              <td><a href=".#{fname}">#{c}</a></td>
               <td>#{m}</td>
               <td class="#{klass_type}">#{v}</td>
             </tr>
